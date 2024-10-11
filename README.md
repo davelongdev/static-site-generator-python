@@ -2,7 +2,7 @@
 
 ## About
 
-This is a staticsite generator written in Python.
+This is a static site generator written in Python.
 
 ## Status
 
