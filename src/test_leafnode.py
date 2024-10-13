@@ -41,11 +41,11 @@ class TestLeafNode(unittest.TestCase):
         node = LeafNode(
             "This is a test paragraph",
             "p",
-            {"class": "primary"},
+            {"class": "primary"}
         )
         self.assertEqual(
             node.__repr__(),
-            "LeafNode(p, This is a test paragraph, {'class': 'primary'})",
+            "LeafNode(This is a test paragraph, p, {'class': 'primary'})"
         )
 
 def test_leaf_node_with_tag_no_attributes(self):
