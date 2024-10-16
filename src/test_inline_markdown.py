@@ -1,12 +1,19 @@
 import unittest
-from inline_markdown import split_nodes_delimiter
-
+from inline_markdown import (
+    split_nodes_delimiter,
+    extract_markdown_links,
+    extract_markdown_images,
+    split_nodes_image,
+    split_nodes_link,
+)
 from textnode import (
     TextNode,
     text_type_text,
     text_type_bold,
     text_type_italic,
     text_type_code,
+    text_type_link,
+    text_type_image
 )
 
 
@@ -90,6 +97,50 @@ class TestInlineMarkdown(unittest.TestCase):
             new_nodes,
         )
 
+
+    def test_extract_images(self):
+        text = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
+        extracted = extract_markdown_images(text)
+        self.assertEqual(
+            [
+                ("rick roll", "https://i.imgur.com/aKaOqIh.gif"),
+                ("obi wan", "https://i.imgur.com/fJRm4Vk.jpeg")
+            ],
+            extracted
+        )
+
+    def test_extract_links(self):
+        text = "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
+        extracted = extract_markdown_links(text)
+        self.assertEqual(
+            [
+                ("to boot dev", "https://www.boot.dev"),
+                ("to youtube", "https://www.youtube.com/@bootdotdev")
+            ],
+            extracted
+        )
+
+    def test_split_node_link(self):
+        node_list = [
+            TextNode(
+                "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)",
+                text_type_text
+            )
+        ]
+        split = split_nodes_link(node_list)
+        self.assertEqual(
+            split,
+            [
+                TextNode("This is text with a link ", text_type_text),
+                TextNode("to boot dev", text_type_link, "https://www.boot.dev"),
+                TextNode(" and ", text_type_text),
+                TextNode(
+                    "to youtube", text_type_link, "https://www.youtube.com/@bootdotdev"
+                ),
+            ]
+        )
+
+        
 
 if __name__ == "__main__":
     unittest.main()
